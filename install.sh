@@ -37,10 +37,11 @@ fi
 
 # 解压文件到目标目录
 echo "正在解压文件..."
-tar -xzf "$target_dir/base.zip" -C "$target_dir"
+unzip -q "$target_dir/base.zip" -d "$target_dir"
 
 # 检查解压是否成功
 if [ $? -ne 0 ]; then
+    echo "解压失败，请检查文件格式或内容。"
     exit 1
 fi
 
@@ -60,8 +61,6 @@ echo "访问 http://$valid_domain 查看。"
 echo "默认账密:admin/123456"
 echo "请及时在后台修改，防止信息泄露"
 echo "********************配置成功********************"
-[root@VM-0-14-centos ~]# cat i.sh 
-#!/bin/bash
 
 # 定义daemon.json文件路径
 DAEMON_JSON="/etc/docker/daemon.json"
