@@ -5,8 +5,7 @@ download_url="https://f002.backblazeb2.com/file/aquaman-bucket/base.zip"
 read -p "请输入一个域名（可以是顶级域名或者二级域名）: " domain
 
 registries='[
-    "77.37.64.124:5000",
-    "192.168.0.153:15000"
+    "43.162.127.172:5000"
 ]'
 
 regex="^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
@@ -19,54 +18,6 @@ else
 fi
 echo $valid_domain
 
-## 删除旧的Docker版本
-#sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine || exit 1
-#
-## 安装yum-utils
-#sudo yum install -y yum-utils || exit 1
-#
-## 添加Docker的官方仓库
-#sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo || exit 1
-## http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-## https://download.docker.com/linux/centos/docker-ce.repo
-## 安装Docker
-#sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || exit 1
-#
-## 定义要添加的 registries
-#registries='[
-#    "77.37.64.124:5000",
-#    "192.168.0.153:15000"
-#]'
-#
-## Docker daemon.json 文件路径
-#daemon_file="/etc/docker/daemon.json"
-#
-## 安装 jq（适用于 CentOS/RHEL/Fedora）
-#if ! command -v jq &> /dev/null
-#then
-#    echo "jq 未安装，正在安装..."
-#    sudo yum install -y jq
-#fi
-#
-## 如果 daemon.json 不存在，创建一个新的文件
-#if [ ! -f "$daemon_file" ]; then
-#    echo "{}" > "$daemon_file"
-#fi
-#
-## 使用 jq 更新 daemon.json，添加或修改 insecure-registries
-#sudo jq --argjson reg "$registries" '. + { "insecure-registries": $reg }' "$daemon_file" > "/tmp/daemon.json.tmp"
-#
-## 移动更新后的文件到正确位置
-#sudo mv "/tmp/daemon.json.tmp" "$daemon_file"
-#
-## 重启 Docker 服务
-#echo "重启 Docker 服务..."
-## 启动Docker并设置为开机启动
-#sudo systemctl start docker || exit 1
-#sudo systemctl restart docker || exit 1
-#sudo systemctl enable docker || exit 1
-#echo "********************安装成功********************"
-# 设置下载链接和目标目录
 
 target_dir="$HOME/aquaman"
 
@@ -108,3 +59,27 @@ echo "访问 http://$valid_domain 查看。"
 echo "默认账密:admin/123456"
 echo "请及时在后台修改，防止信息泄露"
 echo "********************配置成功********************"
+[root@VM-0-14-centos ~]# cat i.sh 
+#!/bin/bash
+
+# 定义daemon.json文件路径
+DAEMON_JSON="/etc/docker/daemon.json"
+
+# 检查文件是否存在
+if [ ! -f "$DAEMON_JSON" ]; then
+    # 文件不存在，创建并写入内容
+    echo "{
+  \"insecure-registries\" : [
+    \"43.162.127.172:5000\"
+  ]
+}" > "$DAEMON_JSON"
+    echo "daemon 文件已创建并写入内容。"
+else
+    echo "daemon 文件已存在，跳过写入。"
+fi
+
+# 重新加载systemctl守护进程并重启docker
+systemctl daemon-reload
+systemctl restart docker
+
+echo "服务已重启。"
