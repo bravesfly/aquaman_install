@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 download_url="https://f002.backblazeb2.com/file/aquaman-bucket/base.zip"
 read -p "请输入一个域名（可以是顶级域名或者二级域名）: " domain
 
@@ -16,7 +15,9 @@ else
     echo "无效的域名，请输入正确的域名格式。"
     exit 1
 fi
-echo $valid_domain
+
+# Rest of your script would continue here...
+echo "使用的域名是: $valid_domain"
 
 
 target_dir="$HOME/aquaman"
