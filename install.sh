@@ -37,7 +37,7 @@ fi
 
 # 解压文件到目标目录
 echo "正在解压文件..."
-unzip "$target_dir/base.zip" -d "$target_dir"
+tar -xzf "$target_dir/base.zip" -C "$target_dir"
 
 # 检查解压是否成功
 if [ $? -ne 0 ]; then
